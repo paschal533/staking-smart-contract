@@ -17,7 +17,7 @@ contract Staking {
     Position position;
 
     uint public currentPositionId;
-    //mapping(uint => Position) public positions;
+    mapping(uint => Position) public positions;
     mapping (address  => uint[]) public positionIdsByAddress;
     mapping(uint => uint) public tiers;
     uint[] public lockPeriods;
