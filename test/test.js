@@ -293,7 +293,7 @@ describe('Staking', function () {
                 const signerBalanceAfter = await signer2.getBalance()
 
                 expect(
-                   signerBalanceAfter
+                   //signerBalanceAfter
                 ).to.equal(
                     signerBalanceBefore
                     .sub(gasUsed)
