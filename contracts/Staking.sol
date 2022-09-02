@@ -38,7 +38,7 @@ contract Staking {
     function stakeEther(uint numDays) external payable {
         require(tiers[numDays] > 0, "Mapping not found");
 
-        positions[currentPositionId] = Position{
+        positions[currentPositionId] = Position(
             currentPositionId,
             msg.sender,
             block.timestamp,
@@ -47,14 +47,14 @@ contract Staking {
             msg.value,
             calculateInterest(tiers[numDays], numDays, msg.value),
             true
-        };
+        );
 
         positionIdsByAddress[msg.sender].push(currentPositionId);
         currentPositionId += 1;
     }
 
     function calculateInterest(uint basisPoints, uint numDays, uint weiAmount) private pure returns(uint){
-        return basisPoints / 10000 * weiAmount;
+        return basisPoints * weiAmount / 10000;
     }
 
     function modifyLockPeriods(uint numDays, uint basisPoints) external {
@@ -73,14 +73,14 @@ contract Staking {
     }
 
     function getPositionById(uint positionId) external view returns(Position memory) {
-        return position[positionId];
+        return positions[positionId];
     }
 
     function getPositionIdForAddress(address walletAddress) external view returns(uint[] memory) {
         return positionIdsByAddress[walletAddress];
     }
 
-    function changeUnLockDate(uint positionId, uint newUnlockDate) external {
+    function changeUnlockDate(uint positionId, uint newUnlockDate) external {
         require(owner == msg.sender, "Only owner may modify staking period");
 
         positions[positionId].unlockDate = newUnlockDate;
@@ -91,7 +91,7 @@ contract Staking {
         require(positions[positionId].walletAddress == msg.sender, "only position creator may modify positon");
         require(positions[positionId].open == true, "Position is closed");
 
-        position[positionId].open = false;
+        positions[positionId].open = false;
 
 
         if(block.timestamp > positions[positionId].unlockDate) {
@@ -100,4 +100,5 @@ contract Staking {
         }else {
             payable(msg.sender).call{value: positions[positionId].weiStaked}("");
         }
+    }
 }
