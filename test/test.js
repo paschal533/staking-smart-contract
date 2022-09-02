@@ -290,7 +290,7 @@ describe('Staking', function () {
                 receipt = await transaction.wait()
                 
                 const gasUsed = receipt.gasUsed.mul(receipt.effectiveGasPrice)
-                //const signerBalanceAfter = await signer2.getBalance()
+                const signerBalanceAfter = await signer2.getBalance()
 
                 expect(
                    signerBalanceAfter
