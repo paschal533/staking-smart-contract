@@ -72,7 +72,7 @@ contract Staking {
         return tiers[numDays];
     }
 
-    function getPositionById(uint positionId) external view returns(Position memory) {
+    //function getPositionById(uint positionId) external view returns(Position memory) {
         return positions[positionId];
     }
 
