@@ -35,7 +35,7 @@ async function main() {
 
     data = { value: ethers.utils.parseEther('1.75')}
     transaction = await staking.connect(signer2).stakeEther(30, data)
-    receipt = transaction.wait()
+    //receipt = transaction.wait()
     block = await provider.getBlock(receipt.blockNumber)
     newUnlockDate = block.timestamp - (86400 * 100)
     await staking.connect(signer1).changeUnlockDate(4, newUnlockDate)
