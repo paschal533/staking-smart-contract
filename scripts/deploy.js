@@ -38,7 +38,7 @@ async function main() {
     receipt = transaction.wait()
     block = await provider.getBlock(receipt.blockNumber)
     newUnlockDate = block.timestamp - (86400 * 100)
-    //await staking.connect(signer1).changeUnlockDate(4, newUnlockDate)
+    await staking.connect(signer1).changeUnlockDate(4, newUnlockDate)
 }
 
 main()
