@@ -26,7 +26,7 @@ async function main() {
     data = { value: ethers.utils.parseEther('1.75')}
     transaction = await staking.connect(signer2).stakeEther(180, data)
 
-    //data = { value: ethers.utils.parseEther('5')}
+    data = { value: ethers.utils.parseEther('5')}
     transaction = await staking.connect(signer2).stakeEther(90, data)
     receipt = transaction.wait()
     block = await provider.getBlock(receipt.blockNumber)
