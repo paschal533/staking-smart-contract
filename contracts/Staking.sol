@@ -91,7 +91,7 @@ contract Staking {
         require(positions[positionId].walletAddress == msg.sender, "only position creator may modify positon");
         require(positions[positionId].open == true, "Position is closed");
 
-        positions[positionId].open = false;
+        //positions[positionId].open = false;
 
 
         if(block.timestamp > positions[positionId].unlockDate) {
