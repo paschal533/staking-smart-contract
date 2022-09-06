@@ -98,7 +98,7 @@ contract Staking {
             uint amount = positions[positionId].weiStaked + positions[positionId].weiInterest;
             payable(msg.sender).call{value: amount}("");
         }else {
-            //payable(msg.sender).call{value: positions[positionId].weiStaked}("");
+            payable(msg.sender).call{value: positions[positionId].weiStaked}("");
         }
     }
 }
