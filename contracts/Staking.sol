@@ -96,7 +96,7 @@ contract Staking {
 
         if(block.timestamp > positions[positionId].unlockDate) {
             uint amount = positions[positionId].weiStaked + positions[positionId].weiInterest;
-            //payable(msg.sender).call{value: amount}("");
+            payable(msg.sender).call{value: amount}("");
         }else {
             payable(msg.sender).call{value: positions[positionId].weiStaked}("");
         }
