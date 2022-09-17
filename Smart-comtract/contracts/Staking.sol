@@ -12,15 +12,30 @@ contract Staking {
         uint weiStaked;
         uint weiInterest;
         bool open;
-    } 
+    }
+
+    struct Borrower { 
+      uint positionId;
+      address walletAddress;
+      uint createdDate;
+      uint endDate;
+      uint percentInterest;
+      uint weiBorrowed;
+      uint weiInterest;
+      bool paid;
+    }
 
     Position position;
+    Borrower borrower;
 
     uint public currentPositionId;
     mapping(uint => Position) public positions;
     mapping (address  => uint[]) public positionIdsByAddress;
     mapping(uint => uint) public tiers;
+    mapping(uint => Borrower) public borrowers;
+    mapping(address => uint) public borrowerIdByAddress;
     uint[] public lockPeriods;
+    uint public borrowPositionId;
 
     constructor() payable {
         owner = msg.sender;
@@ -45,7 +60,7 @@ contract Staking {
             block.timestamp + (numDays * 1 days),
             tiers[numDays],
             msg.value,
-            calculateInterest(tiers[numDays], numDays, msg.value),
+            calculateInterest(tiers[numDays], msg.value),
             true
         );
 
@@ -53,7 +68,7 @@ contract Staking {
         currentPositionId += 1;
     }
 
-    function calculateInterest(uint basisPoints, uint numDays, uint weiAmount) private pure returns(uint){
+    function calculateInterest(uint basisPoints, uint weiAmount) private pure returns(uint){
         return basisPoints * weiAmount / 10000;
     }
 
@@ -100,5 +115,34 @@ contract Staking {
         }else {
             payable(msg.sender).call{value: positions[positionId].weiStaked}("");
         }
+    }
+
+    function BorrowFunds(uint amount, address sendTo, uint numDays) external payable {
+        require(owner == msg.sender, "Only owner can send funds");
+        borrowers[borrowPositionId] = Borrower (
+            borrowPositionId,
+            sendTo,
+            block.timestamp,
+            block.timestamp + (numDays * 1 days),
+            4000,
+            amount,
+            (8 * amount) / 100,
+            false
+        );
+
+        payable(sendTo).call{value: amount}("");
+        borrowerIdByAddress[sendTo] = borrowPositionId;
+        borrowPositionId += 1;
+    }
+
+    function payBorrowedFund(address borrower) public payable {
+      require(borrowerIdByAddress[borrower] >= 0, "Key does not exist");
+      uint borrowerId = borrowerIdByAddress[borrower];
+      uint amount = borrowers[borrowerId].weiInterest + borrowers[borrowerId].weiBorrowed;
+      require(msg.value >= amount, "amount is not complete");
+      require(borrowers[borrowerId].paid == false, "debts has been paid");
+
+      borrowers[borrowerId].paid = true;
+      payable(address(this)).call{value: amount}("");
     }
 }

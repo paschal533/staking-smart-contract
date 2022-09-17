@@ -302,4 +302,83 @@ describe('Staking', function () {
             })
         })
     })
+
+    describe('Borrow', function() {
+        describe('owner', function() {
+         it('sends funds', async () => {
+             const data = { value : ethers.utils.parseEther('8')}
+             await staking.connect(signer1).BorrowFunds(30, signer1.address, 40, data)
+              
+             expect(await staking.borrowPositionId()).to.equal(1)
+         })
+        }) 
+ 
+        describe('non-owner', function() {
+           it('reverts', async () => {
+             const data = { value : ethers.utils.parseEther('8')}
+ 
+             expect(
+               staking.connect(signer2).BorrowFunds(30, signer1.address, 40, data)
+             ).to.be.revertedWith(
+                 'Only owner can send funds'
+             )
+           })
+        })
+    })
+
+    describe('Pay Borrowed Fund', function() {
+         it('Pays debts', async () => {
+             const data = { value : ethers.utils.parseEther('8')}
+             await staking.connect(signer1).BorrowFunds(30, signer1.address, 40, data)
+
+             const debt = { value : ethers.utils.parseEther('20')}
+
+             await staking.connect(signer1).payBorrowedFund(signer1.address, debt)
+
+             const borrower = await staking.borrowers(0)
+
+             expect(await borrower.paid).to.equal(true)
+         }) 
+ 
+        it('reverts', async () => {
+            const data = { value : ethers.utils.parseEther('8')}
+            staking.connect(signer2).BorrowFunds(30, signer1.address, 40, data)
+
+            const debt = { value : ethers.utils.parseEther('8')}
+
+            expect(
+              staking.connect(signer1).payBorrowedFund(signer1.address, debt)
+            ).to.be.revertedWith(
+                'amount is not complete'
+            )
+        })
+
+        it('reverts', async () => {
+            const data = { value : ethers.utils.parseEther('8')}
+            staking.connect(signer2).BorrowFunds(30, signer1.address, 40, data)
+
+            const debt = { value : ethers.utils.parseEther('20')}
+
+            expect(
+              staking.connect(signer1).payBorrowedFund(signer2.address, debt)
+            ).to.be.revertedWith(
+                'Key does not exist'
+            )
+        })
+
+        it('reverts', async () => {
+            const data = { value : ethers.utils.parseEther('8')}
+            staking.connect(signer2).BorrowFunds(30, signer1.address, 40, data)
+
+            const debt = { value : ethers.utils.parseEther('20')}
+
+            await staking.connect(signer1).payBorrowedFund(signer1.address, debt)
+
+            expect(
+              staking.connect(signer1).payBorrowedFund(signer1.address, debt)
+            ).to.be.revertedWith(
+                'debts has been paid'
+            )
+        })
+     })
 })
