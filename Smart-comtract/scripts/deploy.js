@@ -1,7 +1,7 @@
 async function main() {
     [signer1, signer2] = await ethers.getSigners();
 
-    //Staking = await ethers.getContractFactory('Staking', signer1);
+    Staking = await ethers.getContractFactory('Staking', signer1);
 
     staking = await Staking.deploy({
         value: ethers.utils.parseEther('0.003')
