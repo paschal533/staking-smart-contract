@@ -7,7 +7,7 @@ async function main() {
        value: ethers.utils.parseEther('0.003')
     });
 
-   // console.log("Staking contract deployed to:", staking.address, "by", signer1.address)
+   console.log("Staking contract deployed to:", staking.address, "by", signer1.address)
      
 }
 
