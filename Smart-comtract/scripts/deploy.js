@@ -4,7 +4,7 @@ async function main() {
     Staking = await ethers.getContractFactory('Staking', signer1);
 
     staking = await Staking.deploy({
-       // value: ethers.utils.parseEther('0.003')
+       value: ethers.utils.parseEther('0.003')
     });
 
     console.log("Staking contract deployed to:", staking.address, "by", signer1.address)
