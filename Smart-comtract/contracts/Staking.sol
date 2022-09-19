@@ -104,7 +104,7 @@ contract Staking {
 
     function closePosition(uint positionId) external {
         require(positions[positionId].walletAddress == msg.sender, "only position creator may modify positon");
-        require(positions[positionId].open == true, "Position is closed");
+        //require(positions[positionId].open == true, "Position is closed");
 
         positions[positionId].open = false;
 
