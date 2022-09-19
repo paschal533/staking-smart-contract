@@ -98,7 +98,7 @@ contract Staking {
     function changeUnlockDate(uint positionId, uint newUnlockDate) external {
         require(owner == msg.sender, "Only owner may modify staking period");
 
-        //positions[positionId].unlockDate = newUnlockDate;
+        positions[positionId].unlockDate = newUnlockDate;
 
     }
 
