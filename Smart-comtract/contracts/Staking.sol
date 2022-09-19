@@ -92,7 +92,7 @@ contract Staking {
     }
 
     function getPositionIdForAddress(address walletAddress) external view returns(uint[] memory) {
-        return positionIdsByAddress[walletAddress];
+        //sreturn positionIdsByAddress[walletAddress];
     }
 
     function changeUnlockDate(uint positionId, uint newUnlockDate) external {
